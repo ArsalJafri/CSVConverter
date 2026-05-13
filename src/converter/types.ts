@@ -24,14 +24,14 @@ export type RawStoryGraphRow = {
   "Owned?": string;
 };
 
-type BookFormat =
+export type BookFormat =
   | "paperback"
   | "hardcover"
   | "audio"
   | "digital"
   | "unknown";
 
-type ReadingStatus =
+export type ReadingStatus =
   | "read"
   | "to-read"
   | "did-not-finish"
@@ -39,13 +39,13 @@ type ReadingStatus =
   | "currently-reading"
   | "unknown";
 
-type Pace =
+export type Pace =
   | "fast"
   | "medium"
   | "slow"
   | "unknown";
 
-type Mood =
+export type Mood =
   | "lighthearted"
   | "adventurous"
   | "challenging"
@@ -62,13 +62,13 @@ type Mood =
   | "tense"
   | "unknown";
 
-type CharacterOrPlotDriven =
+export type CharacterOrPlotDriven =
   | "character"
   | "mix"
   | "plot"
   | "unknown";
 
-type StoryGraphTraitAnswer =
+export type StoryGraphTraitAnswer =
   | "yes"
   | "no"
   | "complicated"
