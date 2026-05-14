@@ -80,6 +80,7 @@ export type NormalizedBook = {
   contributors: string[];
 
   isbn: string;
+  isbn13: string, 
   externalId: string;
 
   format: BookFormat;

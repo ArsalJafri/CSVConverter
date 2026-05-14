@@ -94,3 +94,64 @@ function normalizeTraitAnswer(answer: string): StoryGraphTraitAnswer {
     return validateTraitAnswer(cleanedAnswer)
 }
 
+
+type BookIdentifier = {
+  isbn: string;
+  isbn13: string;
+  externalId: string;
+};
+
+function normalizeIsbnOrUid(rawStoryGraphId: string): BookIdentifier {
+  const cleanedId = rawStoryGraphId.trim();
+
+  if (cleanedId.length === 0) { return { isbn: "", isbn13: "", externalId: "" }; }
+
+  if (cleanedId.length === 13) { return { isbn: "", isbn13: cleanedId, externalId: "" }; }
+
+  if (cleanedId.length === 10) { return { isbn: cleanedId, isbn13: "", externalId: "" }; }
+
+  return { isbn: "", isbn13: "", externalId: cleanedId };
+}
+
+function normalizeStoryGraphRow(rawRow: RawStoryGraphRow): NormalizedBook {
+    const identifier = normalizeIsbnOrUid(rawRow["ISBN/UID"]);
+    const normalizedRow: NormalizedBook = {
+        title: rawRow.Title, 
+        authors: splitStringToList(rawRow.Authors), 
+        contributors: splitStringToList(rawRow.Contributors), 
+
+        isbn: identifier.isbn,
+        isbn13: identifier.isbn13,  
+        externalId: rawRow["ISBN/UID"], 
+
+        format: normalizeBookFormat(rawRow.Format), 
+
+        readStatus: normalizeReadStatus(rawRow["Read Status"]), 
+
+        dateAdded: rawRow["Date Added"],
+        lastDateRead: rawRow["Last Date Read"],
+        datesRead: splitStringToList(rawRow["Dates Read"]),
+
+        readCount: parseReadCount(rawRow["Read Count"]), 
+
+        moods: normalizeMoods(rawRow.Moods), 
+        pace: normalizePace(rawRow.Pace), 
+
+        characterOrPlotDriven: normalizeCharacterOrPlotDriven(rawRow["Character- or Plot-Driven?"]), 
+        strongCharacterDevelopment: normalizeTraitAnswer(rawRow["Strong Character Development?"]),
+        loveableCharacters: normalizeTraitAnswer(rawRow["Loveable Characters?"]),
+        diverseCharacters: normalizeTraitAnswer(rawRow["Diverse Characters?"]),
+        flawedCharacters: normalizeTraitAnswer(rawRow["Flawed Characters?"]),
+
+        starRating: parseValidNumber(rawRow["Star Rating"]), 
+        review: rawRow.Review, 
+
+        contentWarnings: splitStringToList(rawRow["Content Warnings"]), 
+        contentWarningDescription: rawRow["Content Warning Description"], 
+        
+        tags: splitStringToList(rawRow.Tags), 
+        owned: isOwned(rawRow["Owned?"]), 
+    }
+
+    return normalizedRow
+}
